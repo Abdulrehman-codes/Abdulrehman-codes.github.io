@@ -87693,7 +87693,7 @@ a.uv(q,-1.5707963267948966,6.283185307179586*this.b,!1,r)},
 dn(a){return a.b!==this.b}}
 A.ay3.prototype={
 $1(a){var s=null
-return new A.bf(B.oW,A.aP(A.b([B.Sw,B.c6,A.a_("Your seat is held for a minute, and a bot plays your cards until you are back.",s,s,s,s,A.as(14,B.N,1.45,500),s,s),B.AT,A.j5(!1,!1,58,"Stay",new A.ay1(a),s),new A.qh("Leave",new A.ay2(a),s)],t.p),B.a3,s,B.j,B.C),s)},
+return new A.bf(B.oW,A.aP(A.b([B.Sw,B.c6,A.a_("A bot takes your seat for the rest of this game, and you are out of it for good.",s,s,s,s,A.as(14,B.N,1.45,500),s,s),B.AT,A.j5(!1,!1,58,"Stay",new A.ay1(a),s),new A.qh("Leave",new A.ay2(a),s)],t.p),B.a3,s,B.j,B.C),s)},
 $S:183}
 A.ay1.prototype={
 $0(){return A.d4(this.a,!1).ks(!1)},
