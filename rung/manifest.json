@@ -1,12 +1,15 @@
 {
+    "id": "/rung/",
     "name": "Rung",
     "short_name": "Rung",
-    "start_url": ".",
+    "description": "Court piece online: Single Sarr, Double Sarr, Band Rung and Kaat Pe Rung. Play friends or bots, no sign-in.",
+    "start_url": "./",
+    "scope": "./",
     "display": "standalone",
-    "background_color": "#1B3A2F",
-    "theme_color": "#1B3A2F",
-    "description": "Court piece online: Single Sarr, Double Sarr, Band Rung and Kaat Pe Rung.",
-    "orientation": "portrait-primary",
+    "orientation": "portrait",
+    "background_color": "#000000",
+    "theme_color": "#000000",
+    "categories": ["games", "entertainment"],
     "prefer_related_applications": false,
     "icons": [
         {
@@ -30,6 +33,29 @@
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "screenshots/01_home.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Choose a game: Single Sarr, Double Sarr, Band Rung or Kaat Pe Rung"
+        },
+        {
+            "src": "screenshots/02_table.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "At the table: the rung, the score and your hand"
+        },
+        {
+            "src": "screenshots/03_bidding.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Band Rung: bid for sarrs"
         }
     ]
 }

@@ -20,14 +20,18 @@
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="Rung - court piece online. Four players, two teams, thirteen sarrs.">
 
+  <meta name="theme-color" content="#000000">
+  <!-- Black from the first paint: the page was white until Flutter drew. -->
+  <style>html, body { background: #000; margin: 0; }</style>
+
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Rung">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png?v=2">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png?v=3">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png?v=2"/>
+  <link rel="icon" type="image/png" href="favicon.png?v=3"/>
 
   <title>Rung</title>
   <link rel="manifest" href="manifest.json">
@@ -41,19 +45,79 @@
     For more details:
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
-  <!-- Anyone who visited before has a service worker from the old build
-       still controlling this page, and it will go on serving them that build.
-       This drops it, once, so the app they get is the app that is deployed. -->
+  <!-- Installing as an app.
+
+       The browser offers an install with 'beforeinstallprompt', which can
+       fire before Flutter has started, so it is caught here and kept on
+       window.rungInstall for lib/src/web/install_web.dart to read. The
+       browser's own banner is left alone: this only keeps the offer so the
+       Install button in Settings can use it too. -->
+  <script>
+    (function () {
+      var offer = null;
+      var install = {
+        ready: false,
+        standalone: window.matchMedia('(display-mode: standalone)').matches ||
+          window.navigator.standalone === true,
+        ios: /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1),
+        onChange: null,
+        prompt: function () {
+          if (!offer) return Promise.resolve(false);
+          var used = offer;
+          offer = null;
+          install.ready = false;
+          return used.prompt()
+            .then(function () { return used.userChoice; })
+            .then(function (choice) {
+              changed();
+              return choice.outcome === 'accepted';
+            });
+        }
+      };
+      function changed() { if (install.onChange) install.onChange(); }
+      window.addEventListener('beforeinstallprompt', function (e) {
+        offer = e;
+        install.ready = true;
+        changed();
+      });
+      window.addEventListener('appinstalled', function () {
+        offer = null;
+        install.ready = false;
+        changed();
+      });
+      window.rungInstall = install;
+    })();
+  </script>
+
+  <!-- The service worker: sw.js, next to this page.
+
+       It is network first, so while online the page is always the deployed
+       build and a cache never hides a fix; the cache is only read when the
+       network fails, so the installed app still opens offline.
+
+       Visitors from before it existed may still have Flutter's old worker, or
+       caches it left. Those are dropped; ours is kept. -->
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function (regs) {
-        for (var i = 0; i < regs.length; i++) regs[i].unregister();
+        for (var i = 0; i < regs.length; i++) {
+          var w = regs[i].active || regs[i].waiting || regs[i].installing;
+          if (!w || !/\/sw\.js$/.test(new URL(w.scriptURL).pathname)) {
+            regs[i].unregister();
+          }
+        }
       });
       if (window.caches && caches.keys) {
         caches.keys().then(function (keys) {
-          for (var i = 0; i < keys.length; i++) caches.delete(keys[i]);
+          for (var i = 0; i < keys.length; i++) {
+            if (keys[i].indexOf('rung-') !== 0) caches.delete(keys[i]);
+          }
         });
       }
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js');
+      });
     }
   </script>
   <script src="flutter_bootstrap.js" async></script>
